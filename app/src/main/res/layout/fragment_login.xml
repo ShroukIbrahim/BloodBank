@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.fragment.UserCycleFragment.LoginFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:paddingTop="@dimen/dim_6xl">
+
+
+
+
+    <ImageView
+        android:id="@+id/login_fragment_logo"
+        android:layout_width="@dimen/dim_20xl"
+        android:layout_height="@dimen/dim_20xl"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/logo"/>
+
+    <EditText
+        android:id="@+id/login_fragment_phone_num"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_5xl"
+        android:layout_below="@+id/login_fragment_logo"
+        android:layout_margin="@dimen/dim_marg"
+        android:background="@color/white"
+        android:hint="@string/phone_num"
+        android:gravity="start"
+        android:inputType="phone"
+        android:padding="@dimen/dim_marg"
+        android:textSize="@dimen/txt_size_l" />
+
+    <EditText
+        android:id="@+id/login_fragment_password"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_5xl"
+        android:layout_margin="@dimen/dim_marg"
+        android:layout_below="@+id/login_fragment_phone_num"
+        android:background="@color/white"
+        android:gravity="start"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:textSize="@dimen/txt_size_l" />
+
+    <LinearLayout
+        android:id="@+id/login_fragment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dim_2xl"
+        android:layout_below="@+id/login_fragment_password"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/login_fragment_remmber_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remmberme"
+            android:layout_marginEnd="@dimen/dim_6xl"
+            android:textSize="@dimen/txt_size_m" />
+
+
+        <TextView
+            android:id="@+id/login_fragment_forget_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forget_password"
+            android:drawableStart="@drawable/error"
+            android:textColor="@color/black"
+            android:textSize="@dimen/txt_size_m" />
+
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/login_fragment_login"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_4xl"
+        android:layout_below="@+id/login_fragment_layout"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/dim_2xl"
+        android:layout_marginEnd="@dimen/dim_2xl"
+        android:layout_marginTop="@dimen/dim_5xl"
+        android:background="@color/login_bnt"
+        android:text="@string/login"
+        android:textColor="@color/white"
+        android:textSize="@dimen/txt_size_l" />
+
+    <Button
+        android:id="@+id/login_fragment_create_new_account"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_4xl"
+        android:layout_below="@+id/login_fragment_login"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/dim_marg_l"
+        android:layout_marginEnd="@dimen/dim_marg_l"
+        android:layout_marginTop="@dimen/dim_marg_l"
+        android:background="@color/create_account_bnt"
+        android:text="@string/create_new_account"
+        android:textColor="@color/white"
+        android:textSize="@dimen/txt_size_m" />
+
+
+</RelativeLayout>
+
