@@ -60,18 +60,20 @@ public class ForgetPasswordStep1Fragment extends Fragment {
             @Override
             public void onResponse( Call<ResetPassword> call, Response<ResetPassword> response ) {
                 if(response.body().getStatus().equals(1)) {
-                    Toast.makeText(getActivity(), "Please Check Your Phone.......", Toast.LENGTH_SHORT).show();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("pinCode",String.valueOf(response.body().getData().getPinCodeForTest()));
-                    bundle.putString("PhoneNum",PhoneNum);
                     ForgetPasswordStep2Fragment forgetPasswordStep2Fragment = new ForgetPasswordStep2Fragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("pinCode",(response.body().getData().getPinCodeForTest()));
+                    bundle.putString("PhoneNum",PhoneNum);
+                    forgetPasswordStep2Fragment.setArguments(bundle);
                     if(getFragmentManager()!=null){
                         HelperMethod.replace(forgetPasswordStep2Fragment,getActivity().getSupportFragmentManager(),R.id.user_cycle_activity_usercycle,null,null);
-//                        forgetPasswordStep2Fragment.setArguments(bundle);
+
                     }
+                    Toast.makeText(getActivity(),response.body().getMsg()+ "", Toast.LENGTH_SHORT).show();
 
                 }
                 else {
+
                     Toast.makeText(getActivity(), "The Phone Number is anviled", Toast.LENGTH_SHORT).show();
                 }
 

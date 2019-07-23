@@ -8,8 +8,16 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/slider_fragment_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"/>
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/SliderDots"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/slider_fragment_btn_skip"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal" />
+
 
     <Button
         android:id="@+id/slider_fragment_btn_skip"

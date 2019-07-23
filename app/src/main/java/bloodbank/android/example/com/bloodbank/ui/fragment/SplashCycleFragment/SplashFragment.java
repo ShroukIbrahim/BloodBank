@@ -34,8 +34,6 @@ public class SplashFragment extends Fragment {
        //handler after postdelay to run method
         new Handler().postDelayed(new Runnable(){
 
-
-
             @Override
             public void run() {
                 SliderFragment sliderFragment = new SliderFragment();

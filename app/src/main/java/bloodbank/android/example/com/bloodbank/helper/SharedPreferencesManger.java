@@ -2,7 +2,12 @@ package bloodbank.android.example.com.bloodbank.helper;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
+
+import bloodbank.android.example.com.bloodbank.data.model.login.Client;
+import bloodbank.android.example.com.bloodbank.data.model.login.Login;
+import bloodbank.android.example.com.bloodbank.data.model.register.Register;
 
 public class SharedPreferencesManger {
 
@@ -13,24 +18,25 @@ public class SharedPreferencesManger {
     public static String USER_EMAIL = "USER_EMAIL";
     public static String USER_PASSWORD = "USER_PASSWORD";
     public static String CHECK_BOX ="CHECK_BOX";
-    private static String USER_BID = "USER_BID";
+    public static String USER_BID = "USER_BID";
     public static String USER_PHONE = "USER_PHONE";
-    private static String USER_DLD = "USER_DLD";
-    private static String USER_BLOOD_TYPE_ID = "USER_BLOOD_TYPE_ID";
-    private static String USER_CITY_ID = "USER_CITY_ID";
-    private static String USER_CITY_NAME = "USER_CITY_NAME";
-    private static String USER_GOVERMENT_ID = "USER_GOVERMENT_ID";
-    private static String USER_GOVERMENT_NAME = "USER_GOVERMENT_NAME";
-    private static String USER_BLOOD_TYPE_NAME = "USER_BLOOD_TYPE_NAME";
+    public static String USER_DLD = "USER_DLD";
+    public static String USER_BLOOD_TYPE_ID = "USER_BLOOD_TYPE_ID";
+    public static String USER_CITY_ID = "USER_CITY_ID";
+    public static String USER_CITY_NAME = "USER_CITY_NAME";
+    public static String USER_GOVERMENT_ID = "USER_GOVERMENT_ID";
+    public static String USER_GOVERMENT_NAME = "USER_GOVERMENT_NAME";
+    public static String USER_BLOOD_TYPE_NAME = "USER_BLOOD_TYPE_NAME";
+    public Context context;
 
 
     public static void setSharedPreferences(Activity activity) {
         if (sharedPreferences == null) {
-            sharedPreferences = activity.getSharedPreferences(
-                    "Blood", activity.MODE_PRIVATE);
+            sharedPreferences = activity.getSharedPreferences("Blood", activity.MODE_PRIVATE);
 
         }
     }
+
 
     public static void SaveData(Activity activity, String data_Key, String data_Value) {
         if (sharedPreferences != null) {

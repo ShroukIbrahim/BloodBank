@@ -9,6 +9,7 @@
     <color name="black">#000000</color>
     <color name="login_bnt">#FF3BB54B</color>
     <color name="create_account_bnt">#3699db</color>
-    <color name="gray">#f2f2f2</color>
+    <color name="gray">#FAFAFA</color>
+    <color name="Dgray">#EBE6E6</color>
     <color name="maven">#2f3f51</color>
 </resources>

@@ -7,64 +7,71 @@
 
     <LinearLayout
         android:id="@+id/layout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/dim_5xl"
-        android:weightSum="10"
+        android:weightSum="12"
+        android:layout_marginTop="@dimen/dim_marg"
         android:orientation="horizontal">
     <LinearLayout
         android:id="@+id/Governoratslayout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_weight="5"
         android:background="@drawable/fillter"
         android:orientation="horizontal">
 
         <Spinner
-            android:id="@+id/donation_request_fragment_filter_spinner"
+            android:id="@+id/donation_fragment_filter_spinner_city"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dim_4xl"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:spinnerMode="dropdown" />
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/donation_request_fragment_search_keyword"
+            android:id="@+id/donation_fragment_search_keyword_city"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dim_4xl"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
             android:background="@color/white"
-            android:hint="@string/choose_gonvertment" />
+            android:layout_gravity="center"
+            android:textSize="@dimen/dim_xl"
+            android:hint="@string/choose_city" />
     </LinearLayout>
         <LinearLayout
-            android:id="@+id/citylayout"
+            android:id="@+id/bloodtypelayout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:layout_margin="@dimen/dim_marg"
+            android:layout_weight="5"
+            android:layout_marginStart="@dimen/dim_s"
             android:background="@drawable/fillter"
             android:orientation="horizontal">
 
             <Spinner
-                android:id="@+id/donation_fragment_filter_spinner"
+                android:id="@+id/donation_fragment_filter_spinner_bloodtype"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:spinnerMode="dropdown" />
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/donation_fragment_search_keyword"
+                android:id="@+id/donation_fragment_search_keyword_bloodtype"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dim_5xl"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_weight="3"
+                android:layout_gravity="center"
+                android:textSize="@dimen/dim_xl"
                 android:background="@color/white"
                 android:hint="@string/choose_city" />
         </LinearLayout>
-        <ImageButton
+        <ImageView
             android:id="@+id/donation_fragment_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/dim_s"
             android:background="@drawable/search_background"
             android:src="@drawable/ic_search_black_24dp"
+            android:clickable="true"
             android:layout_weight="2"/>
     </LinearLayout>
 
@@ -72,7 +79,9 @@
         android:id="@+id/fragment_donation_list_of_donation_request"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout" />
+        android:layout_margin="@dimen/dim_m"
+        android:layout_below="@+id/layout"
+        android:layout_marginTop="1dp" />
 
 
 

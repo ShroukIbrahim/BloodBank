@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Blood Bank</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about">About</string>
     <string name="skip">skip</string>
     <string name="phone_num">Phone Number</string>
     <string name="password">Password</string>
@@ -16,6 +16,7 @@
     <string name="last_date_of_donation">Last date Of Donation</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="send">Send</string>
+    <string name="edit">Edit</string>
     <string name="change_password_code">Change password code</string>
     <string name="validation_code">Validation code</string>
     <string name="new_password">New Password</string>
@@ -45,10 +46,51 @@
     <string name="name_of_hospital">Name Of Hospital</string>
     <string name="nots">Nots</string>
     <string name="patient_name">Patient Name:</string>
-    <string name="hosiptal_name">Hospital:</string>
+    <string name="hosiptal_name">Hospital :</string>
     <string name="city_name">City:</string>
     <string name="details">Details</string>
     <string name="call">Call</string>
-    <string name="choose_gonvertment">Choose Govertnet</string>
+    <string name="choose_gonvertment">Choose Government</string>
+    <string name="gonvertment">Government</string>
     <string name="choose_city">Choose City</string>
+    <string name="title">Title</string>
+    <string name="massage">Massage</string>
+    <string name="privcy">© 2019 Ipda3 Tec All Rights Reserved</string>
+    <string name="connectus">Connect Us</string>
+
+
+    <!--<string name="google_maps_key">AIzaSyB0DeVNHbYX8QjHqhmaXKXlZTmlXXqQfmU</string>-->
+    <string name="choose_location">Choose Location</string>
+    <string name="name">Name :</string>
+    <string name="age">Age :</string>
+    <string name="bloodtype">Blood Type :</string>
+    <string name="no_of_package">Number Of Package :</string>
+    <string name="hosiptal_address">Hospital Address :</string>
+    <string name="phonenum">Phone Number :</string>
+    <string name="bt1">+A</string>
+    <string name="save">Save</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cancel">Cancel</string>
+    <string name="GPSAlertDialogTitle">OpenGps</string>
+    <string name="GPSAlertDialogMessage">Plaese Wait..</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="num_of_package">Number Of Package</string>
+    <string name="notification_title">Find Someone newer you</string>
+    <string name="notification_title1">Find Someone newer you</string>
+
+    <string-array name="package_arrays">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
 </resources>

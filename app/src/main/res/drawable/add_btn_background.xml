@@ -5,7 +5,7 @@
 
     <solid android:color="@color/login_bnt" />
 
-    <corners android:radius="40dp" />
+    <corners android:radius="360dp" />
 
 
 

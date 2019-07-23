@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.google.android.gms.maps.MapView>
+
+    <Button
+        android:id="@+id/current_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/maven"
+        android:layout_margin="@dimen/dim_2xl"
+        android:text="@string/choose_location"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dim_2xl"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

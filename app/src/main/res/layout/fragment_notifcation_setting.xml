@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.fragment.HomeCycleFragment.NotifcationSettingFragment">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/custom_toolbar"></include>
+
+    <TextView
+        android:id="@+id/notification_setting_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_16xl"
+        android:layout_below="@+id/toolbar" />
+
+    <RelativeLayout
+        android:id="@+id/bloodtypelayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/notification_setting_text"
+        android:layout_margin="@dimen/dim_m"
+        android:background="@drawable/button_background">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dim_5xl"
+            android:layout_margin="@dimen/dim_m"
+            android:background="@color/gray"
+            android:paddingStart="@dimen/dim_xl"
+            android:paddingTop="@dimen/dim_xl"
+            android:text="@string/blood_type"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dim_2xl" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/notification_setting_blodtype"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@+id/title" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/governlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bloodtypelayout"
+        android:layout_margin="@dimen/dim_m"
+        android:background="@drawable/button_background">
+
+        <TextView
+            android:id="@+id/gtitle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dim_5xl"
+            android:layout_margin="@dimen/dim_m"
+            android:background="@color/gray"
+            android:paddingStart="@dimen/dim_xl"
+            android:paddingTop="@dimen/dim_xl"
+            android:text="@string/gonvertment"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dim_2xl" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/notification_setting_gonvertment"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@id/gtitle">
+
+        </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/notification_setting_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/governlayout"
+        android:layout_marginStart="@dimen/dim_2xl"
+        android:layout_marginTop="@dimen/dim_2xl"
+        android:layout_marginEnd="@dimen/dim_2xl"
+        android:layout_marginBottom="@dimen/dim_2xl"
+        android:background="@color/maven"
+        android:text="@string/save"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dim_2xl" />
+
+
+</RelativeLayout>

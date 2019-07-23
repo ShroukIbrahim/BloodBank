@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +26,13 @@ import java.util.List;
 import bloodbank.android.example.com.bloodbank.R;
 import bloodbank.android.example.com.bloodbank.data.model.bloodtypes.BloodTypeData;
 import bloodbank.android.example.com.bloodbank.data.model.bloodtypes.BloodTypes;
-import bloodbank.android.example.com.bloodbank.data.model.cleander.DateModel;
 import bloodbank.android.example.com.bloodbank.data.model.governorates.Governorates;
 import bloodbank.android.example.com.bloodbank.data.model.governorates.GovernoratesData;
 import bloodbank.android.example.com.bloodbank.data.model.register.Register;
 import bloodbank.android.example.com.bloodbank.data.rest.ApiServices;
+import bloodbank.android.example.com.bloodbank.helper.DateModel;
 import bloodbank.android.example.com.bloodbank.helper.HelperMethod;
+import bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger;
 import bloodbank.android.example.com.bloodbank.ui.activity.HomeNaigationDrawerActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +43,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static bloodbank.android.example.com.bloodbank.data.rest.RetrofitClient.getClient;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.SaveData;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_API_TOKEN;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_BID;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_BLOOD_TYPE_ID;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_BLOOD_TYPE_NAME;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_CITY_ID;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_CITY_NAME;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_DLD;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_EMAIL;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_ID;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_NAME;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_PASSWORD;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_PHONE;
 
 
 /**
@@ -72,12 +87,14 @@ public class RegisterFragment extends Fragment {
     Button registerFragmentSingup;
     @BindView(R.id.register_fragment_blood_type)
     Spinner registerFragmentBloodType;
-    @BindView(R.id.register_fragment_create_account)
-    TextView registerFragmentCreateAccount;
     @BindView(R.id.spinner_layout2)
     RelativeLayout spinnerLayout2;
     @BindView(R.id.spinner_layout3)
     RelativeLayout spinnerLayout3;
+    @BindView(R.id.tittle)
+    TextView tittle;
+    @BindView(R.id.notf_icon)
+    RelativeLayout notfIcon;
 
     private int governorates_id;
     private int cities_id;
@@ -85,11 +102,14 @@ public class RegisterFragment extends Fragment {
 
     private ApiServices apiServices;
 
-    DatePickerDialog datePickerDialog;
-    int year;
-    int month;
-    int dayOfMonth;
-    Calendar calendar;
+    private DateModel dateModel1;
+    private DateModel dateModel2;
+    final Calendar getDatenow = Calendar.getInstance();
+    private int startYear;
+    private int startMonth;
+    private int startDay;
+
+    SharedPreferencesManger sharedPreferencesManger;
 
 
     public RegisterFragment() {
@@ -98,24 +118,35 @@ public class RegisterFragment extends Fragment {
 
 
     @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container,
-                              Bundle savedInstanceState ) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register, container, false);
         unbinder = ButterKnife.bind(this, view);
+        tittle.setText("Create New Account");
         SpinnerBloodType();
         getGovernorates();
         getCities(governorates_id);
+        startYear = getDatenow.get(Calendar.YEAR);
+        startMonth = getDatenow.get(Calendar.MONTH);
+        startDay = getDatenow.get(Calendar.DAY_OF_MONTH);
+        dateModel1 = new DateModel(String.valueOf(startYear), String.valueOf(startMonth)
+                , String.valueOf(startDay), null);
+        dateModel2 = new DateModel(String.valueOf(startYear), String.valueOf(startMonth)
+                , String.valueOf(startDay), null);
 
-//        Bid = new DateTxt("01", "01", "1970", "01-01-1970");
-//
-//        DecimalFormat mFormat = new DecimalFormat("00");
-//        Calendar calander = Calendar.getInstance();
-//        String cDay = mFormat.format(Double.valueOf(String.valueOf(calander.get(Calendar.DAY_OF_MONTH))));
-//        String cMonth = mFormat.format(Double.valueOf(String.valueOf(calander.get(Calendar.MONTH + 1))));
-//        String cYear = String.valueOf(calander.get(Calendar.YEAR));
-//
-//        registerFragmentLastDateOfDonation = new DateTxt(cDay, cMonth, cYear, cDay + "-" + cMonth + "-" + cYear);
+        registerFragmentDateOfBirth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HelperMethod.showCalender(getActivity(), getString(R.string.date_of_birth), registerFragmentDateOfBirth, dateModel1);
+            }
+        });
+        registerFragmentLastDateOfDonation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HelperMethod.showCalender(getActivity(), getString(R.string.last_date_of_donation), registerFragmentLastDateOfDonation, dateModel2);
+            }
+        });
 
         return view;
     }
@@ -124,7 +155,7 @@ public class RegisterFragment extends Fragment {
         apiServices = getClient().create(ApiServices.class);
         apiServices.getBloodTypes().enqueue(new Callback<BloodTypes>() {
             @Override
-            public void onResponse( Call<BloodTypes> call, Response<BloodTypes> response ) {
+            public void onResponse(Call<BloodTypes> call, Response<BloodTypes> response) {
                 try {
 
                     if (response.body().getStatus().equals(1)) {
@@ -145,7 +176,7 @@ public class RegisterFragment extends Fragment {
                         registerFragmentBloodType.setAdapter(adapter);
                         registerFragmentBloodType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
-                            public void onItemSelected( AdapterView<?> adapterView, View view, int i, long l ) {
+                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                                 if (i != 0) {
                                     bloodtype_id = bloodtypeId.get(i);
                                     Toast.makeText(getActivity(), bloodtype_id + "", Toast.LENGTH_SHORT).show();
@@ -153,7 +184,7 @@ public class RegisterFragment extends Fragment {
                             }
 
                             @Override
-                            public void onNothingSelected( AdapterView<?> adapterView ) {
+                            public void onNothingSelected(AdapterView<?> adapterView) {
 
                             }
                         });
@@ -166,7 +197,7 @@ public class RegisterFragment extends Fragment {
             }
 
             @Override
-            public void onFailure( Call<BloodTypes> call, Throwable t ) {
+            public void onFailure(Call<BloodTypes> call, Throwable t) {
 
             }
         });
@@ -177,7 +208,7 @@ public class RegisterFragment extends Fragment {
         apiServices = getClient().create(ApiServices.class);
         apiServices.getGovernorates().enqueue(new Callback<Governorates>() {
             @Override
-            public void onResponse( Call<Governorates> call, Response<Governorates> response ) {
+            public void onResponse(Call<Governorates> call, Response<Governorates> response) {
                 try {
 
                     if (response.body().getStatus().equals(1)) {
@@ -197,7 +228,7 @@ public class RegisterFragment extends Fragment {
                         registerFragmentGovernorates.setAdapter(adapter);
                         registerFragmentGovernorates.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
-                            public void onItemSelected( AdapterView<?> adapterView, View view, int i, long l ) {
+                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                                 if (i != 0) {
                                     governorates_id = governoratId.get(i);
                                     getCities(governoratId.get(i));
@@ -206,7 +237,7 @@ public class RegisterFragment extends Fragment {
                             }
 
                             @Override
-                            public void onNothingSelected( AdapterView<?> adapterView ) {
+                            public void onNothingSelected(AdapterView<?> adapterView) {
 
                             }
                         });
@@ -218,18 +249,18 @@ public class RegisterFragment extends Fragment {
             }
 
             @Override
-            public void onFailure( Call<Governorates> call, Throwable t ) {
+            public void onFailure(Call<Governorates> call, Throwable t) {
 
             }
 
         });
     }
 
-    private void getCities( int id ) {
+    private void getCities(int id) {
         apiServices = getClient().create(ApiServices.class);
         apiServices.getCities(id).enqueue(new Callback<Governorates>() {
             @Override
-            public void onResponse( Call<Governorates> call, Response<Governorates> response ) {
+            public void onResponse(Call<Governorates> call, Response<Governorates> response) {
                 try {
 
                     if (response.body().getStatus().equals(1)) {
@@ -248,7 +279,7 @@ public class RegisterFragment extends Fragment {
 
                         registerFragmentCities.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
-                            public void onItemSelected( AdapterView<?> adapterView, View view, int i, long l ) {
+                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                                 if (i != 0) {
 
                                     cities_id = cityid.get(i);
@@ -258,7 +289,7 @@ public class RegisterFragment extends Fragment {
                             }
 
                             @Override
-                            public void onNothingSelected( AdapterView<?> adapterView ) {
+                            public void onNothingSelected(AdapterView<?> adapterView) {
 
                             }
                         });
@@ -270,7 +301,7 @@ public class RegisterFragment extends Fragment {
             }
 
             @Override
-            public void onFailure( Call<Governorates> call, Throwable t ) {
+            public void onFailure(Call<Governorates> call, Throwable t) {
 
             }
         });
@@ -279,6 +310,7 @@ public class RegisterFragment extends Fragment {
 
 
     private void Register() {
+
         apiServices = getClient().create(ApiServices.class);
         String name = registerFragmentName.getText().toString();
         String email = registerFragmentEmail.getText().toString();
@@ -288,22 +320,68 @@ public class RegisterFragment extends Fragment {
         String password = registerFragmentPassword.getText().toString();
         String confirmPassword = registerFragmentConfiramPassword.getText().toString();
 
+
+        //validating inputs
+        if (TextUtils.isEmpty(name)) {
+            registerFragmentName.setError("Please enter your Name");
+            registerFragmentName.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(email)) {
+            registerFragmentEmail.setError("Please enter your Email");
+            registerFragmentEmail.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(phoneNum)) {
+            registerFragmentPhoneNum.setError("Please enter your Phone Number");
+            registerFragmentPhoneNum.requestFocus();
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            registerFragmentPassword.setError("Please enter your Password");
+            registerFragmentPassword.requestFocus();
+            return;
+        }
+        if (TextUtils.isEmpty(confirmPassword) && (password != confirmPassword)) {
+            registerFragmentConfiramPassword.setError("Please enter your ConfirmPassword");
+            registerFragmentConfiramPassword.requestFocus();
+            return;
+        }
+
+
         apiServices.onRegister(name, email, dataOfBirth, cities_id, phoneNum,
                 lastDateOfDonation, password, confirmPassword, bloodtype_id).enqueue(new Callback<Register>() {
             @Override
-            public void onResponse( Call<Register> call, Response<Register> response ) {
+            public void onResponse(Call<Register> call, Response<Register> response) {
+                Toast.makeText(getActivity(), response.body().getMsg() + "", Toast.LENGTH_SHORT).show();
                 if (response.body().getStatus().equals(1)) {
+                    SaveData(getActivity(), USER_API_TOKEN, response.body().getData().getApiToken());
+                    SaveData(getActivity(), USER_ID, response.body().getData().getClient().getId().toString());
+                    SaveData(getActivity(), USER_NAME, response.body().getData().getClient().getName());
+                    SaveData(getActivity(), USER_EMAIL, response.body().getData().getClient().getEmail());
+                    SaveData(getActivity(), USER_PHONE, response.body().getData().getClient().getPhone());
+                    SaveData(getActivity(), USER_BLOOD_TYPE_ID, response.body().getData().getClient().getBloodTypeId());
+                    SaveData(getActivity(), USER_BLOOD_TYPE_NAME, response.body().getData().getClient().getBloodType().getName());
+                    SaveData(getActivity(), USER_CITY_ID, response.body().getData().getClient().getCityId());
+                    SaveData(getActivity(), USER_CITY_NAME, response.body().getData().getClient().getCity().getName());
+                    SaveData(getActivity(), USER_DLD, response.body().getData().getClient().getDonationLastDate());
+                    SaveData(getActivity(), USER_BID, response.body().getData().getClient().getBirthDate());
+                    SaveData(getActivity(), USER_PASSWORD, registerFragmentPassword.getText().toString());
+                    SaveData(getActivity(), USER_PASSWORD, registerFragmentConfiramPassword.getText().toString());
+
                     Intent Register = new Intent(getActivity(), HomeNaigationDrawerActivity.class);
                     startActivity(Register);
                 } else {
-                    Toast.makeText(getActivity(), "Peals Enter Valid data ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), response.body().getMsg() + "", Toast.LENGTH_SHORT).show();
                 }
 
 
             }
 
             @Override
-            public void onFailure( Call<Register> call, Throwable t ) {
+            public void onFailure(Call<Register> call, Throwable t) {
 
             }
         });
@@ -325,41 +403,4 @@ public class RegisterFragment extends Fragment {
     }
 
 
-    @OnClick({R.id.register_fragment_date_of_birth, R.id.register_fragment_last_date_of_donation})
-    public void onViewClicked( View view ) {
-        switch (view.getId()) {
-            case R.id.register_fragment_date_of_birth:
-                calendar = Calendar.getInstance();
-                year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH);
-                dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                datePickerDialog = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet( DatePicker datePicker, int year, int month, int day ) {
-                                registerFragmentDateOfBirth.setText(year + "-" + month + "-" + day);
-                            }
-                        }, year, month, dayOfMonth);
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
-                datePickerDialog.show();
-
-                break;
-            case R.id.register_fragment_last_date_of_donation:
-                calendar = Calendar.getInstance();
-                year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH);
-                dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                datePickerDialog = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet( DatePicker datePicker, int year, int month, int day ) {
-                                registerFragmentLastDateOfDonation.setText(year + "-" + month + "-" + day);
-                            }
-                        }, year, month, dayOfMonth);
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
-                datePickerDialog.show();
-
-                break;
-        }
-    }
 }

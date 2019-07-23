@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.HomeCycleFragment.HomeFragment">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/home_navigation_drawer_taplayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabTextColor="@color/maven"
+        app:tabSelectedTextColor="@color/white">
+
+        <android.support.design.widget.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="1"
+            app:tabGravity="fill" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="2"
+            app:tabGravity="fill"/>
+
+
+    </android.support.design.widget.TabLayout>
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/home_navigation_drawer_viewpager"
+        android:layout_below="@id/home_navigation_drawer_taplayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v4.view.ViewPager>
+
+
+    <ImageButton
+        android:id="@+id/fragment_post_add_donation"
+        android:layout_width="@dimen/dim_5xl"
+        android:layout_height="@dimen/dim_5xl"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/dim_2xl"
+        android:layout_marginEnd="@dimen/dim_2xl"
+        android:background="@drawable/add_btn_background"
+        android:src="@drawable/add"
+        android:clickable="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/dim_marg" />
+
+
+
+</RelativeLayout>

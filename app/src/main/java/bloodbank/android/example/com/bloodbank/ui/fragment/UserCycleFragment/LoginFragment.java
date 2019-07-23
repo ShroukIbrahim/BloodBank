@@ -3,7 +3,9 @@ package bloodbank.android.example.com.bloodbank.ui.fragment.UserCycleFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.BinderThread;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import bloodbank.android.example.com.bloodbank.R;
 import bloodbank.android.example.com.bloodbank.data.model.login.Login;
 import bloodbank.android.example.com.bloodbank.data.rest.ApiServices;
 import bloodbank.android.example.com.bloodbank.helper.HelperMethod;
+import bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger;
 import bloodbank.android.example.com.bloodbank.ui.activity.HomeNaigationDrawerActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,8 +63,7 @@ public class LoginFragment extends Fragment {
     @BindView(R.id.login_fragment_create_new_account)
     Button loginFragmentCreateNewAccount;
     Unbinder unbinder;
-
-
+    SharedPreferencesManger sharedPreferencesManger;
 
 
     public LoginFragment() {
@@ -70,11 +72,12 @@ public class LoginFragment extends Fragment {
 
 
     @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container,
-                              Bundle savedInstanceState ) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         unbinder = ButterKnife.bind(this, view);
+        HelperMethod.disappearKeypad(getActivity(),view);
         setSharedPreferences(getActivity());
         dataUserShrPreferences();
         return view;
@@ -82,7 +85,7 @@ public class LoginFragment extends Fragment {
 
     private void dataUserShrPreferences() {
         loginFragmentPhoneNum.setText(LoadData(getActivity(), USER_PHONE));
-        loginFragmentPassword.setText(LoadData(getActivity(),USER_PASSWORD));
+        loginFragmentPassword.setText(LoadData(getActivity(), USER_PASSWORD));
 
         // check is checkBox is Checked
         if (LoadBoolean(getActivity(), String.valueOf(loginFragmentRemmberMe))) {
@@ -95,53 +98,65 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    private void SharedPreferencesSaveData(int id, String ApiToken, String name, String email, String phone,String  password) {
-        SaveData(getActivity(), USER_API_TOKEN, String.valueOf(ApiToken));
-        SaveData(getActivity(), USER_ID, String.valueOf(id));
-        SaveData(getActivity(), USER_NAME, String.valueOf(name));
-        SaveData(getActivity(), USER_EMAIL, String.valueOf(email));
-        SaveData(getActivity(), USER_PHONE, String.valueOf(phone));
-        SaveData(getActivity(), USER_PASSWORD, String.valueOf(password));
-    }
 
-    private void Login()
-    {
-            ApiServices apiServices = getClient().create(ApiServices.class);
-            String Password = loginFragmentPassword.getText().toString();
-            String PhoneNum = loginFragmentPhoneNum.getText().toString();
 
-            apiServices.onLogin(PhoneNum, Password).enqueue(new Callback<Login>() {
-                @Override
-                public void onResponse( Call<Login> call, Response<Login> response ) {
+    private void Login() {
+        ApiServices apiServices = getClient().create(ApiServices.class);
+        String Password = loginFragmentPassword.getText().toString();
+        String PhoneNum = loginFragmentPhoneNum.getText().toString();
 
-                    if (response.body().getStatus().equals(1)) {
 
-                        Toast.makeText(getActivity(), response.body().getMsg() + "..", Toast.LENGTH_SHORT).show();
-                        // check is checkBox is Checked
-                        if (loginFragmentRemmberMe.isChecked()) {
-                            // save data login user
-                            SharedPreferencesSaveData(response.body().getData().getClient().getId()
-                                    , response.body().getData().getApiToken()
-                                    , response.body().getData().getClient().getName(),
-                                    response.body().getData().getClient().getEmail(),
-                                    response.body().getData().getClient().getPhone()
-                                    , loginFragmentPassword.getText().toString());
+        //validating inputs
+        if (TextUtils.isEmpty(PhoneNum)) {
+            loginFragmentPhoneNum.setError("Please enter your Phone Number");
+            loginFragmentPhoneNum.requestFocus();
+            return;
+        }
 
-                        }
-                            Intent Login = new Intent(getActivity(), HomeNaigationDrawerActivity.class);
-                            startActivity(Login);
+        if (TextUtils.isEmpty(Password)) {
+            loginFragmentPassword.setError("Please enter your password");
+            loginFragmentPassword.requestFocus();
+            return;
+        }
 
-                    } else {
-                        Toast.makeText(getActivity(), response.body().getMsg() + "", Toast.LENGTH_SHORT).show();
+
+        apiServices.onLogin(PhoneNum, Password).enqueue(new Callback<Login>() {
+            @Override
+            public void onResponse(Call<Login> call, Response<Login> response) {
+
+
+                if (response.body().getStatus().equals(1)) {
+
+                    Toast.makeText(getActivity(), response.body().getMsg() + "..", Toast.LENGTH_SHORT).show();
+                    // check is checkBox is Checked
+                    if (loginFragmentRemmberMe.isChecked()) {
+                        // save data login user
+                        SaveData(getActivity(), USER_API_TOKEN,response.body().getData().getApiToken());
+                        SaveData(getActivity(), USER_ID, response.body().getData().getClient().getId().toString());
+                        SaveData(getActivity(), USER_NAME, response.body().getData().getClient().getName());
+                        SaveData(getActivity(), USER_EMAIL, response.body().getData().getClient().getEmail());
+                        SaveData(getActivity(), USER_PHONE, response.body().getData().getClient().getPhone());
+                        SaveData(getActivity(), USER_PASSWORD, loginFragmentPassword.getText().toString());
+                        //Toast.makeText(getActivity(),LoadData(getActivity(),USER_API_TOKEN)+ "", Toast.LENGTH_SHORT).show();
+                        //LoadData(getActivity(),USER_API_TOKEN);
+
                     }
 
+                    Intent Login = new Intent(getActivity(), HomeNaigationDrawerActivity.class);
+                    startActivity(Login);
+
+
+                } else {
+                    Toast.makeText(getActivity(), response.body().getMsg() + "", Toast.LENGTH_SHORT).show();
                 }
 
-                @Override
-                public void onFailure( Call<Login> call, Throwable t ) {
+            }
 
-                }
-            });
+            @Override
+            public void onFailure(Call<Login> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
@@ -151,18 +166,18 @@ public class LoginFragment extends Fragment {
     }
 
     @OnClick({R.id.login_fragment_forget_password, R.id.login_fragment_remmber_me, R.id.login_fragment_login, R.id.login_fragment_create_new_account})
-    public void onViewClicked( View view ) {
+    public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.login_fragment_forget_password:
                 ForgetPasswordStep1Fragment forgetPassword1Fragment = new ForgetPasswordStep1Fragment();
-                HelperMethod.replace(forgetPassword1Fragment,getActivity().getSupportFragmentManager(),R.id.user_cycle_activity_usercycle,null,null);
+                HelperMethod.replace(forgetPassword1Fragment, getActivity().getSupportFragmentManager(), R.id.user_cycle_activity_usercycle, null, null);
                 break;
             case R.id.login_fragment_remmber_me:
 
                 loginFragmentRemmberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
-                    public void onCheckedChanged( CompoundButton buttonView, boolean isChecked) {
-                        SaveData(getActivity(), CHECK_BOX,isChecked);
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        SaveData(getActivity(), CHECK_BOX, isChecked);
                     }
                 });
 
@@ -173,7 +188,7 @@ public class LoginFragment extends Fragment {
                 break;
             case R.id.login_fragment_create_new_account:
                 RegisterFragment registerFragment = new RegisterFragment();
-                HelperMethod.replace(registerFragment,getActivity().getSupportFragmentManager(),R.id.user_cycle_activity_usercycle,null,null);
+                HelperMethod.replace(registerFragment, getActivity().getSupportFragmentManager(), R.id.user_cycle_activity_usercycle, null, null);
                 break;
         }
     }

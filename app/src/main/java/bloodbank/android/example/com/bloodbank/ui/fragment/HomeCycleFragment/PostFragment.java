@@ -15,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.model.ModelLoader;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +25,11 @@ import bloodbank.android.example.com.bloodbank.adapter.PostAdapter;
 import bloodbank.android.example.com.bloodbank.data.model.categories.Categories;
 import bloodbank.android.example.com.bloodbank.data.model.categories.CategoriesData;
 import bloodbank.android.example.com.bloodbank.data.model.postfavourite.PostFavourite;
+import bloodbank.android.example.com.bloodbank.data.model.posts.PostData;
 import bloodbank.android.example.com.bloodbank.data.model.posts.Posts;
 import bloodbank.android.example.com.bloodbank.data.rest.ApiServices;
+import bloodbank.android.example.com.bloodbank.helper.OnEndless;
+import bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -34,6 +39,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static bloodbank.android.example.com.bloodbank.data.rest.RetrofitClient.getClient;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.LoadData;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_API_TOKEN;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,7 +51,6 @@ public class PostFragment extends Fragment {
     @BindView(R.id.post_fragment_list_of_post)
     RecyclerView fragmentPostListofpost;
     Unbinder unbinder;
-
     ApiServices apiServices;
     PostAdapter postAdapter;
     @BindView(R.id.post_fragment_filter_spinner)
@@ -54,8 +60,15 @@ public class PostFragment extends Fragment {
     @BindView(R.id.post_fragment_search)
     ImageButton postFragmentSearch;
     private LinearLayoutManager layoutManager;
-    private Integer categories_id;
+    private int categories_id;
+    SharedPreferencesManger sharedPreferencesManger;
 
+
+
+    private OnEndless onEndless;
+    private int maxPage;
+    private List<PostData> postData = new ArrayList<>();
+    private Posts postsList;
 
 
     public PostFragment() {
@@ -72,31 +85,26 @@ public class PostFragment extends Fragment {
         fragmentPostListofpost.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity());
         fragmentPostListofpost.setLayoutManager(layoutManager);
-        getAllPosts();
+        onEndless = new OnEndless(layoutManager, 10) {
+            @Override
+            public void onLoadMore(int current_page) {
+
+                if (current_page>=0 && maxPage != 0 || current_page == 1) {
+                    getAllPosts(current_page);
+                    postFilter(current_page);
+                }
+
+            }
+        };
+        
+        fragmentPostListofpost.addOnScrollListener(onEndless);
+        postAdapter = new PostAdapter(getActivity(), postData);
+        fragmentPostListofpost.setAdapter(postAdapter);
         getCategory();
+        getAllPosts(1);
         return view;
     }
 
-    private void getAllPosts() {
-        apiServices = getClient().create(ApiServices.class);
-        apiServices.getAllPost().enqueue(new Callback<Posts>() {
-            @Override
-            public void onResponse( Call<Posts> call, Response<Posts> response ) {
-                if (response.body().getStatus().equals(1)) {
-                    postAdapter = new PostAdapter(getActivity(), response.body());
-                    postAdapter.notifyDataSetChanged();
-                    fragmentPostListofpost.setAdapter(postAdapter);
-
-
-                }
-            }
-
-            @Override
-            public void onFailure( Call<Posts> call, Throwable t ) {
-
-            }
-        });
-    }
 
 
     private void getCategory() {
@@ -111,7 +119,9 @@ public class PostFragment extends Fragment {
                         List<String> listSpinner = new ArrayList<String>();
                         final List<Integer> id = new ArrayList<Integer>();
                         listSpinner.add("Categories");
+                        id.add(0);
                         for (int i = 0; i < categories.size(); i++) {
+                            id.add(categories.get(i).getId());
                             listSpinner.add(categories.get(i).getName());
                         }
                         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
@@ -121,7 +131,7 @@ public class PostFragment extends Fragment {
                             @Override
                             public void onItemSelected( AdapterView<?> adapterView, View view, int i, long l ) {
                                 if (i != 0) {
-                                    categories_id = categories.get(i).getId();
+                                    categories_id =id.get(i);
 
                                 }
                             }
@@ -145,16 +155,15 @@ public class PostFragment extends Fragment {
 
         });
     }
-
-    private void postFilter( int id, String Keyword ) {
+    private void getAllPosts(int page) {
         apiServices = getClient().create(ApiServices.class);
-        apiServices.getFilterPost(Keyword, id).enqueue(new Callback<Posts>() {
+        apiServices.getAllPost(page,LoadData(getActivity(),USER_API_TOKEN) ).enqueue(new Callback<Posts>() {
             @Override
             public void onResponse( Call<Posts> call, Response<Posts> response ) {
                 if (response.body().getStatus().equals(1)) {
-                    postAdapter = new PostAdapter(getActivity(), response.body());
+                    maxPage= response.body().getData().getCurrentPage();
+                    postData.addAll(response.body().getData().getData());
                     postAdapter.notifyDataSetChanged();
-                    fragmentPostListofpost.setAdapter(postAdapter);
 
                 }
             }
@@ -165,20 +174,26 @@ public class PostFragment extends Fragment {
             }
         });
     }
-
-    private   void add_removeFavourit( int id, String api_token )
-    {
-
-        apiServices.add_removeFavourit(id,api_token).enqueue(new Callback<PostFavourite>() {
+    private void postFilter(int page) {
+        apiServices = getClient().create(ApiServices.class);
+        apiServices.getFilterPost(LoadData(getActivity(),USER_API_TOKEN), postFragmentSearchKeyword.getText().toString(), categories_id).enqueue(new Callback<Posts>() {
             @Override
-            public void onResponse( Call<PostFavourite> call, Response<PostFavourite> response ) {
+            public void onResponse( Call<Posts> call, Response<Posts> response ) {
                 if (response.body().getStatus().equals(1)) {
-                    Toast.makeText(getActivity(),response.message()+ "", Toast.LENGTH_SHORT).show();
+
+                    postData.clear();
+                    postAdapter.notifyDataSetChanged();
+
+                    postData.addAll(response.body().getData().getData());
+                    postAdapter.notifyDataSetChanged();
+
+
+
                 }
             }
 
             @Override
-            public void onFailure( Call<PostFavourite> call, Throwable t ) {
+            public void onFailure( Call<Posts> call, Throwable t ) {
 
             }
         });
@@ -195,7 +210,7 @@ public class PostFragment extends Fragment {
 
     @OnClick(R.id.post_fragment_search)
     public void onViewClicked() {
-        postFilter(categories_id, postFragmentSearchKeyword.getText().toString());
+        postFilter(1);
 
     }
 }

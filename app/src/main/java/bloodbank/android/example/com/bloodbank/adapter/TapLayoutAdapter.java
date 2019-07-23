@@ -4,6 +4,8 @@ package bloodbank.android.example.com.bloodbank.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import bloodbank.android.example.com.bloodbank.R;
 import bloodbank.android.example.com.bloodbank.ui.fragment.HomeCycleFragment.DonationsFragment;
 import bloodbank.android.example.com.bloodbank.ui.fragment.HomeCycleFragment.PostFragment;
 
@@ -25,8 +27,9 @@ public class TapLayoutAdapter extends FragmentPagerAdapter {
         return tabarray [position];
     }
 
+
     @Override
-    public Fragment getItem( int position )
+    public Fragment getItem( int position)
     {
         switch (position)
         {

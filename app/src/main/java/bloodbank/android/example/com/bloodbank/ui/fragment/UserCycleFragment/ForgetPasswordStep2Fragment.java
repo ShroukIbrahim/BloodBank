@@ -8,11 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import bloodbank.android.example.com.bloodbank.R;
 import bloodbank.android.example.com.bloodbank.data.model.newpassword.NewPassword;
-import bloodbank.android.example.com.bloodbank.data.model.resetpassword.ResetPassword;
 import bloodbank.android.example.com.bloodbank.data.rest.ApiServices;
 import bloodbank.android.example.com.bloodbank.helper.HelperMethod;
 import butterknife.BindView;
@@ -41,8 +41,9 @@ public class ForgetPasswordStep2Fragment extends Fragment {
     Button fragmentForgetPasswordStep2ChangePassword;
     Unbinder unbinder;
     ApiServices apiServices;
-    Bundle bundle = getArguments();
+
     private String phoneNum;
+    private int Pincode;
 
 
     public ForgetPasswordStep2Fragment() {
@@ -51,16 +52,18 @@ public class ForgetPasswordStep2Fragment extends Fragment {
 
 
     @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container,
-                              Bundle savedInstanceState ) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_forget_password_step2, container, false);
         unbinder = ButterKnife.bind(this, view);
+        Bundle bundle = this.getArguments();
         if (bundle != null) {
             phoneNum = bundle.getString("PhoneNum");
-
+            Pincode = bundle.getInt("pinCode");
+            //Toast.makeText(getActivity(),Pincode+ "", Toast.LENGTH_SHORT).show();
         }
-            return view;
+        return view;
 
     }
 
@@ -82,7 +85,7 @@ public class ForgetPasswordStep2Fragment extends Fragment {
         String confirmNewPassword = fragmentForgetPasswordStep2ConfirmNewPassword.getText().toString();
         apiServices.newPassword(NewPasswword, confirmNewPassword, validationCode, phoneNum).enqueue(new Callback<NewPassword>() {
             @Override
-            public void onResponse( Call<NewPassword> call, Response<NewPassword> response ) {
+            public void onResponse(Call<NewPassword> call, Response<NewPassword> response) {
                 if (response.body().getStatus().equals(1)) {
                     Toast.makeText(getActivity(), "Change Password Successfully.......", Toast.LENGTH_SHORT).show();
                     LoginFragment loginFragment = new LoginFragment();
@@ -96,7 +99,7 @@ public class ForgetPasswordStep2Fragment extends Fragment {
             }
 
             @Override
-            public void onFailure( Call<NewPassword> call, Throwable t ) {
+            public void onFailure(Call<NewPassword> call, Throwable t) {
 
 
             }

@@ -7,8 +7,20 @@
     android:background="@drawable/background"
     tools:context=".ui.fragment.HomeCycleFragment.DonationRequestFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+<include layout="@layout/custom_toolbar">
 
-    <android.support.design.widget.TextInputEditText
+</include>
+
+
+        <android.support.design.widget.TextInputEditText
         android:id="@+id/request_donation_fragment_name"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dim_5xl"
@@ -26,7 +38,6 @@
         android:id="@+id/request_donation_fragment_age"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dim_5xl"
-        android:layout_below="@id/request_donation_fragment_name"
         android:layout_margin="@dimen/dim_marg"
         android:background="@color/white"
         android:gravity="start"
@@ -40,7 +51,6 @@
         android:id="@+id/spinner_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dim_5xl"
-        android:layout_below="@id/request_donation_fragment_age"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -51,6 +61,7 @@
             android:id="@+id/request_donation_fragment_blood_type"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+
             android:spinnerMode="dropdown" />
     </RelativeLayout>
 
@@ -66,7 +77,7 @@
         android:orientation="horizontal">
 
         <Spinner
-            android:id="@+id/request_donation_fragment_num_of_packeg"
+            android:id="@+id/request_donation_fragment_num_of_package"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:spinnerMode="dropdown" />
@@ -136,19 +147,21 @@
         android:id="@+id/request_donation_fragment_hospiyal_adress"
         android:layout_width="0dp"
         android:layout_height="@dimen/dim_5xl"
-        android:layout_weight="7"
+        android:layout_weight="8"
         android:background="@color/white"
         android:layout_marginEnd="@dimen/dim_m"
         android:gravity="start"
-        android:hint="@string/phone_num"
+        android:hint="@string/name_of_hosiptal"
         android:inputType="phone"
         android:padding="@dimen/dim_marg"
         android:textColor="@color/red"
         android:textSize="@dimen/txt_size_l" />
     <ImageView
+        android:id="@+id/request_donation_fragment_open_map"
         android:layout_width="0dp"
         android:layout_height="@dimen/dim_5xl"
         android:layout_weight="2"
+        android:clickable="true"
         android:src="@drawable/location"
         android:background="@drawable/locationstyle" />
 
@@ -189,9 +202,9 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/dim_marg"
         android:background="@color/maven"
-        android:text="@string/signup"
+        android:text="@string/send"
         android:textColor="@color/white"
         android:textSize="@dimen/txt_size_m" />
-
-
+    </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
