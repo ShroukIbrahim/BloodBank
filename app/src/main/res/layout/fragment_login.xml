@@ -16,6 +16,7 @@
         android:layout_marginTop="@dimen/dim_6xl"
         android:src="@drawable/logo"/>
 
+
     <EditText
         android:id="@+id/login_fragment_phone_num"
         android:layout_width="match_parent"

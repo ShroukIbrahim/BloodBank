@@ -22,6 +22,7 @@ import bloodbank.android.example.com.bloodbank.data.rest.ApiServices;
 import bloodbank.android.example.com.bloodbank.helper.HelperMethod;
 import bloodbank.android.example.com.bloodbank.ui.activity.HomeNaigationDrawerActivity;
 import bloodbank.android.example.com.bloodbank.ui.fragment.HomeCycleFragment.DonationDetailsFragment;
+import bloodbank.android.example.com.bloodbank.ui.fragment.HomeCycleFragment.PostsDetailsFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -65,15 +66,20 @@ public class DonationRequestAdapter extends RecyclerView.Adapter<DonationRequest
             public void onClick(View v) {
                 HomeNaigationDrawerActivity homeNaigationDrawerActivity = (HomeNaigationDrawerActivity) activity;
                 homeNaigationDrawerActivity.setVisibility(View.VISIBLE);
-                DonationDetailsFragment donationDetailsFragment = new DonationDetailsFragment();
+                PostsDetailsFragment postsDetailsFragment = new PostsDetailsFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt("id",id);
-                donationDetailsFragment.setArguments(bundle);
+                bundle.putString("PatientName", donationRequestDataList.get(position).getPatientName());
+                bundle.putString("PatientAge", donationRequestDataList.get(position).getPatientAge());
+                bundle.putString("HospitalName", donationRequestDataList.get(position).getHospitalName());
+                bundle.putString("BloodType", donationRequestDataList.get(position).getBloodType().getName());
+                bundle.putString("BagsNum", donationRequestDataList.get(position).getBagsNum());
+                bundle.putString("HospitalAddress", donationRequestDataList.get(position).getHospitalAddress());
+                bundle.putString("city", donationRequestDataList.get(position).getCity().getName());
+                bundle.putString("Latitude", donationRequestDataList.get(position).getLatitude());
+                bundle.putString("Latitude", donationRequestDataList.get(position).getLongitude());
+                postsDetailsFragment.setArguments(bundle);
                 FragmentManager manager = ((AppCompatActivity) activity).getSupportFragmentManager();
-                HelperMethod.replace(donationDetailsFragment, manager, R.id.frame2, null, null);
-
-
-
+                HelperMethod.replace(postsDetailsFragment, manager, R.id.frame2, null, null);
             }
         });
     }

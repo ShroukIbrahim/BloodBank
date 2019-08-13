@@ -11,13 +11,20 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.model.ModelLoader;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import bloodbank.android.example.com.bloodbank.R;
 import bloodbank.android.example.com.bloodbank.data.model.governorates.GovernoratesData;
+import bloodbank.android.example.com.bloodbank.data.rest.ApiServices;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static bloodbank.android.example.com.bloodbank.data.rest.RetrofitClient.getClient;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.LoadData;
+import static bloodbank.android.example.com.bloodbank.helper.SharedPreferencesManger.USER_API_TOKEN;
 
 public class NotificationSettingAdapter extends RecyclerView.Adapter<NotificationSettingAdapter.NotificationViewHolder> {
 

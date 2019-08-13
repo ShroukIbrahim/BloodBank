@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bloodbank.android.example.com.bloodbank.R;
-import bloodbank.android.example.com.bloodbank.adapter.NotificationAdapter;
 import bloodbank.android.example.com.bloodbank.adapter.NotificationSettingAdapter;
 import bloodbank.android.example.com.bloodbank.data.model.bloodtypes.BloodTypeData;
 import bloodbank.android.example.com.bloodbank.data.model.bloodtypes.BloodTypes;

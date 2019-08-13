@@ -8,7 +8,7 @@
                     <padding android:bottom="@dimen/dim_m" android:left="@dimen/dim_m" android:right="@dimen/dim_m" android:top="@dimen/dim_m" />
                     <gradient android:endColor="@color/white" android:startColor="@color/white"/>
 
-                     <stroke android:width="@dimen/txt_size_xl" android:color="@color/white" />
+                     <stroke android:width="@dimen/txt_size_xl" android:color="@android:color/transparent" />
                  </shape>
             </item>
 

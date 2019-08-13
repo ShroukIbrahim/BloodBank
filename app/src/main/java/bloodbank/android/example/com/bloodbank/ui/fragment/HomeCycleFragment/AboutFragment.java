@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.model.ModelLoader;
 
@@ -58,6 +59,7 @@ public class AboutFragment extends Fragment {
             public void onResponse(Call<Settings> call, Response<Settings> response) {
                 if (response.body().getStatus().equals(1)) {
                     aboutFragmentText.setText(response.body().getData().getAboutApp());
+
                 }
             }
 
